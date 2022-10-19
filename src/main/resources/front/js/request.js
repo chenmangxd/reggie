@@ -64,7 +64,7 @@
       window.vant.Notify({
         message: message,
         type: 'warning',
-        duration: 5 * 1000
+        duration: 5 * 100000
       })
       //window.top.location.href = '/front/page/no-wify.html'
       return Promise.reject(error)
