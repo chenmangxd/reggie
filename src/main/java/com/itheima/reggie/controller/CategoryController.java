@@ -7,6 +7,10 @@ import com.itheima.reggie.entity.Category;
 import com.itheima.reggie.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +26,15 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private RedisCacheManager cacheManager;
     /**
      * 新增分类
      * @param category
      * @return
      */
     @PostMapping
+    @CachePut(value = "put",key = "#cataegory.id")
     public R<String> save(@RequestBody Category category){
         log.info("category:{}",category);
         categoryService.save(category);
@@ -41,6 +48,7 @@ public class CategoryController {
      * @return
      */
     @GetMapping("/page")
+    @Cacheable(value = "setmeal",key = "#page+'_'+#pageSize")
     public R<Page> page(int page,int pageSize){
         //分页构造器
         Page<Category> pageInfo = new Page<>(page,pageSize);
@@ -60,6 +68,7 @@ public class CategoryController {
      * @return
      */
     @DeleteMapping
+    @CacheEvict(value = {"setmeal"},allEntries = true)
     public R<String> delete(Long id){
         log.info("删除分类，id为：{}",id);
 
@@ -75,6 +84,7 @@ public class CategoryController {
      * @return
      */
     @PutMapping
+    @CacheEvict(value = {"setmeal"},allEntries = true)
     public R<String> update(@RequestBody Category category){
         log.info("修改分类信息：{}",category);
 
