@@ -1,9 +1,6 @@
 package com.itheima.reggie.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -31,7 +28,8 @@ public class Dish implements Serializable {
     //菜品价格
     private BigDecimal price;
 
-
+    @TableLogic
+    private Integer isDeleted;
     //商品码
     private String code;
 

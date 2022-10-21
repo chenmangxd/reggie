@@ -116,11 +116,17 @@ public class DishController {
      * @param id
      * @return
      */
+    @DeleteMapping
+    public R< String> delete(@RequestParam("ids") Long id){
+        System.out.println("删除前"+dishService.getById(id).getIsDeleted());
+        System.out.println(id);
+         dishService.removeById(id);
+        System.out.println("删除后"+dishService.getById(id).getIsDeleted());
+        return R.success("删除成功");
+    }
     @GetMapping("/{id}")
     public R<DishDto> get(@PathVariable Long id){
-
         DishDto dishDto = dishService.getByIdWithFlavor(id);
-
         return R.success(dishDto);
     }
 
