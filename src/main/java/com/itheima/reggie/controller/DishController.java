@@ -118,6 +118,7 @@ public class DishController {
      */
     @DeleteMapping
     public R< String> delete(@RequestParam("ids") Long id){
+
         System.out.println("删除前"+dishService.getById(id).getIsDeleted());
         System.out.println(id);
          dishService.removeById(id);

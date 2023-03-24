@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +29,16 @@ public class CategoryController {
 
     @Autowired
     private RedisCacheManager cacheManager;
+    @Autowired
+    private RedisTemplate redisTemplate;
     /**
      * 新增分类
      * @param category
      * @return
      */
     @PostMapping
-    @CachePut(value = "put",key = "#cataegory.id")
+    @CacheEvict(value = "setmeal",allEntries = true)
+//    @CachePut(value = "setmeal",key = "#category.name")
     public R<String> save(@RequestBody Category category){
         log.info("category:{}",category);
         categoryService.save(category);
@@ -68,13 +72,12 @@ public class CategoryController {
      * @return
      */
     @DeleteMapping
-    @CacheEvict(value = {"setmeal"},allEntries = true)
+    @CacheEvict(value ={"setmeal"},allEntries = true)
     public R<String> delete(Long id){
         log.info("删除分类，id为：{}",id);
 
         //categoryService.removeById(id);
         categoryService.remove(id);
-
         return R.success("分类信息删除成功");
     }
 
@@ -84,7 +87,7 @@ public class CategoryController {
      * @return
      */
     @PutMapping
-    @CacheEvict(value = {"setmeal"},allEntries = true)
+//    @CacheEvict(value = {"setmeal"},allEntries = true)
     public R<String> update(@RequestBody Category category){
         log.info("修改分类信息：{}",category);
 

@@ -21,7 +21,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper,Category> im
 
     @Autowired
     private SetmealService setmealService;
-
+    @Autowired
+    private CategoryService categoryService;
     /**
      * 根据id删除分类，删除之前需要进行判断
      * @param id
@@ -43,7 +44,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper,Category> im
         LambdaQueryWrapper<Setmeal> setmealLambdaQueryWrapper = new LambdaQueryWrapper<>();
         //添加查询条件，根据分类id进行查询
         setmealLambdaQueryWrapper.eq(Setmeal::getCategoryId,id);
-        int count2 = setmealService.count();
+        int count2 = setmealService.count(setmealLambdaQueryWrapper);
         if(count2 > 0){
             //已经关联套餐，抛出一个业务异常
             throw new CustomException("当前分类下关联了套餐，不能删除");
